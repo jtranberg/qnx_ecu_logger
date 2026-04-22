@@ -1,22 +1,36 @@
 #include "logger.h"
 #include "telemetry.h"
+#include "config.h"
 
 #include <chrono>
-#include <thread>
-#include <string>
 #include <iostream>
+#include <string>
+#include <thread>
 
 int main() {
+    Config config = loadConfig("config.txt");
+
     std::cout << "Starting ECU logger simulation..." << std::endl;
+    std::cout << "Logging enabled: " << (config.loggingEnabled ? "true" : "false") << std::endl;
+    std::cout << "Telemetry enabled: " << (config.telemetryEnabled ? "true" : "false") << std::endl;
+    std::cout << "Send interval (ms): " << config.sendIntervalMs << std::endl;
+    std::cout << "Temperature threshold: " << config.temperatureThreshold << "C" << std::endl;
 
     int temperature = 72;
 
     while (true) {
-        std::string logMessage = "Engine temperature normal: " + std::to_string(temperature) + "C";
-        std::string telemetryPayload = "temp=" + std::to_string(temperature);
+        std::string state = (temperature >= config.temperatureThreshold) ? "HIGH" : "NORMAL";
+        std::string logMessage = "Engine temperature " + state + ": " + std::to_string(temperature) + "C";
+        std::string telemetryPayload =
+            "temp=" + std::to_string(temperature) + ",state=" + state;
 
-        logEvent(logMessage);
-        sendTelemetry(telemetryPayload);
+        if (config.loggingEnabled) {
+            logEvent(logMessage);
+        }
+
+        if (config.telemetryEnabled) {
+            sendTelemetry(telemetryPayload);
+        }
 
         temperature++;
 
@@ -24,7 +38,7 @@ int main() {
             temperature = 72;
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(2));
+        std::this_thread::sleep_for(std::chrono::milliseconds(config.sendIntervalMs));
     }
 
     return 0;

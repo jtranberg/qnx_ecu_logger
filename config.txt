@@ -1,0 +1,4 @@
+logging_enabled true
+telemetry_enabled true
+send_interval_ms 2000
+temperature_threshold 75
