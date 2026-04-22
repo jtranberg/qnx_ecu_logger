@@ -175,3 +175,125 @@ At the VERY TOP, add one line:
 
 ```md
 Built as a focused simulation of ECU-level observability and telemetry patterns aligned with modern automotive data architectures (e.g., GM vehicle observability systems).
+
+
+
+output as expected
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ ./ecu_logger.exe
+Starting ECU logger simulation...
+Logging enabled: true
+Telemetry enabled: true
+Send interval (ms): 2000
+Temperature threshold: 75C
+Sending telemetry: temp=72,state=NORMAL
+Sending telemetry: temp=73,state=NORMAL
+Sending telemetry: temp=74,state=NORMAL
+Sending telemetry: temp=75,state=HIGH
+Sending telemetry: temp=76,state=HIGH
+Sending telemetry: temp=72,state=NORMAL
+Sending telemetry: temp=73,state=NORMAL
+
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ g++ main.cpp logger.cpp telemetry.cpp config.cpp -o ecu_logger.exe
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ ./ecu_logger.exe
+Starting ECU logger simulation...
+Logging enabled: true
+Telemetry enabled: true
+Send interval (ms): 2000
+Temperature threshold: 75C
+Max retries: 3
+Retry delay (ms): 500
+Attempt 1/3: Sending telemetry: temp=72,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=73,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=74,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=75,state=HIGH
+Attempt 1/3: Sending telemetry: temp=76,state=HIGH
+Attempt 1/3: Sending telemetry: temp=72,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=73,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=74,state=NORMAL
+Attempt 1/3: Sending telemetry: temp=75,state=HIGH
+Attempt 1/3: Sending telemetry: temp=76,state=HIGH
+
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ g++ main.cpp logger.cpp telemetry.cpp config.cpp -o ecu_logger.exe
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ ./ecu_logger.exe
+Starting ECU logger simulation...
+Logging enabled: true
+Telemetry enabled: true
+Send interval (ms): 2000
+Temperature threshold: 75C
+Max retries: 3
+Retry delay (ms): 500
+Attempt 1/3: Sending telemetry: temp=72,state=NORMAL
+Attempt 1/3: Telemetry send failed: temp=73,state=NORMAL
+Retrying in 500 ms...
+Attempt 2/3: Telemetry send failed: temp=73,state=NORMAL
+Retrying in 500 ms...
+Attempt 3/3: Sending telemetry: temp=73,state=NORMAL
+Attempt 1/3: Telemetry send failed: temp=74,state=NORMAL
+Retrying in 500 ms...
+Attempt 2/3: Telemetry send failed: temp=74,state=NORMAL
+Retrying in 500 ms...
+Attempt 3/3: Telemetry send failed: temp=74,state=NORMAL
+
+
+Me@Central-Command UCRT64 /c/Users/Me/Desktop/qnx
+$ cat ecu_log.txt
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 75C
+[LOG] Engine temperature normal: 76C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 75C
+[LOG] Engine temperature normal: 76C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Engine temperature NORMAL: 74C
+[LOG] Engine temperature HIGH: 75C
+[LOG] Engine temperature HIGH: 76C
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Telemetry send success: temp=72,state=NORMAL
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Telemetry send success: temp=73,state=NORMAL
+[LOG] Engine temperature NORMAL: 74C
+[LOG] Telemetry send success: temp=74,state=NORMAL
+[LOG] Engine temperature HIGH: 75C
+[LOG] Telemetry send success: temp=75,state=HIGH
+[LOG] Engine temperature HIGH: 76C
+[LOG] Telemetry send success: temp=76,state=HIGH
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Telemetry send success: temp=72,state=NORMAL
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Telemetry send success: temp=73,state=NORMAL
+[LOG] Engine temperature NORMAL: 74C
+[LOG] Telemetry send success: temp=74,state=NORMAL
+[LOG] Engine temperature HIGH: 75C
+[LOG] Telemetry send success: temp=75,state=HIGH
+[LOG] Engine temperature HIGH: 76C
+[LOG] Telemetry send success: temp=76,state=HIGH
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Telemetry send success: temp=72,state=NORMAL
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Telemetry send success: temp=73,state=NORMAL
+[LOG] Engine temperature NORMAL: 74C
+[LOG] Telemetry send failed after retries: temp=74,state=NORMAL
+
