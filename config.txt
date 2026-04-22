@@ -2,3 +2,5 @@ logging_enabled true
 telemetry_enabled true
 send_interval_ms 2000
 temperature_threshold 75
+max_retries 3
+retry_delay_ms 500

@@ -3,6 +3,10 @@
 
 #include <string>
 
-void sendTelemetry(const std::string& data);
+bool sendTelemetryWithRetry(
+    const std::string& data,
+    int maxRetries,
+    int retryDelayMs
+);
 
 #endif

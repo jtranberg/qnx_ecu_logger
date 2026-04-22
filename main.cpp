@@ -15,6 +15,8 @@ int main() {
     std::cout << "Telemetry enabled: " << (config.telemetryEnabled ? "true" : "false") << std::endl;
     std::cout << "Send interval (ms): " << config.sendIntervalMs << std::endl;
     std::cout << "Temperature threshold: " << config.temperatureThreshold << "C" << std::endl;
+    std::cout << "Max retries: " << config.maxRetries << std::endl;
+    std::cout << "Retry delay (ms): " << config.retryDelayMs << std::endl;
 
     int temperature = 72;
 
@@ -29,7 +31,19 @@ int main() {
         }
 
         if (config.telemetryEnabled) {
-            sendTelemetry(telemetryPayload);
+            bool sent = sendTelemetryWithRetry(
+                telemetryPayload,
+                config.maxRetries,
+                config.retryDelayMs
+            );
+
+            if (config.loggingEnabled) {
+                if (sent) {
+                    logEvent("Telemetry send success: " + telemetryPayload);
+                } else {
+                    logEvent("Telemetry send failed after retries: " + telemetryPayload);
+                }
+            }
         }
 
         temperature++;

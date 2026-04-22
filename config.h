@@ -6,6 +6,8 @@ struct Config {
     bool telemetryEnabled;
     int sendIntervalMs;
     int temperatureThreshold;
+    int maxRetries;
+    int retryDelayMs;
 };
 
 Config loadConfig(const char* filename);

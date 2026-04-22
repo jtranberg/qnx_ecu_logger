@@ -9,6 +9,8 @@ Config loadConfig(const char* filename) {
     config.telemetryEnabled = true;
     config.sendIntervalMs = 2000;
     config.temperatureThreshold = 75;
+    config.maxRetries = 3;
+    config.retryDelayMs = 500;
 
     std::ifstream file(filename);
 
@@ -29,6 +31,10 @@ Config loadConfig(const char* filename) {
             config.sendIntervalMs = std::stoi(value);
         } else if (key == "temperature_threshold") {
             config.temperatureThreshold = std::stoi(value);
+        } else if (key == "max_retries") {
+            config.maxRetries = std::stoi(value);
+        } else if (key == "retry_delay_ms") {
+            config.retryDelayMs = std::stoi(value);
         }
     }
 
