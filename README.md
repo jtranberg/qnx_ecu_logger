@@ -1,177 +1,177 @@
-# 🚗 Embedded Observability Logger (QNX-Style Simulation)
+# 🚗 ECU Observability Logger (C++ Simulation)
 
 ## 🧠 Overview
 
-This project simulates a lightweight **embedded logging and telemetry system** inspired by automotive environments (e.g., QNX-based ECUs).
+This project simulates an **embedded observability and telemetry system** inspired by automotive environments (e.g., QNX-based ECUs).
 
-The goal is to demonstrate how **observability systems** operate under real-world constraints:
+It models how data flows from a device through logging and telemetry pipelines, with a focus on:
 
-> device → logging → telemetry → external system
+- reliability under failure
+- runtime configuration (control plane)
+- system observability
+- non-blocking behavior
 
-This mirrors how modern vehicles collect and transmit data from ECUs to cloud systems for monitoring and diagnostics.
-
----
-
-## ⚙️ Core Concepts
-
-### 📊 Observability
-This project models the three pillars of observability:
-
-- **Logs** → System events (written locally)
-- **Metrics** → (simulated via structured data)
-- **Telemetry** → Data sent externally
+> device → logging → telemetry → retry → observability
 
 ---
 
-### 🔄 Data Plane vs Control Plane
+## ⚙️ Key Features
 
-- **Data Plane**
-  - Log data
-  - Telemetry payloads
-  - Sensor outputs
-
-- **Control Plane (conceptual in this project)**
-  - What gets logged
-  - When data is sent
-  - Behavior under failure
+### 📊 Observability System
+- Local logging of system state (`ecu_log.txt`)
+- Structured recording of telemetry outcomes (success/failure)
+- Clear visibility into system behavior over time
 
 ---
 
-### ⏱ Real-Time Design Considerations
+### 🔄 Control Plane (Runtime Configuration)
+System behavior is controlled via `config.txt`:
 
-Inspired by QNX and embedded systems:
+- Enable/disable logging
+- Enable/disable telemetry
+- Adjust send interval
+- Set temperature threshold
+- Configure retry behavior
 
-- Logging must be **fast and lightweight**
-- Telemetry must be **non-blocking**
-- System must remain **responsive under load**
-- Failures must not crash the system
+No recompilation required.
+
+---
+
+### 📡 Telemetry Pipeline
+- Simulated data transmission
+- Asynchronous send behavior
+- Non-blocking main loop
+
+---
+
+### 🔁 Failure Handling & Retry Logic
+- Simulated unreliable transport conditions
+- Configurable retry attempts
+- Retry delay between attempts
+- Final failure detection and logging
+
+---
+
+### 🌡️ State-Based Behavior
+- Temperature threshold determines system state:
+  - `NORMAL`
+  - `HIGH`
+- State is included in telemetry and logs
 
 ---
 
 ## 🧱 Architecture
 
-[ Embedded System (Simulated ECU) ]
+
+[ Simulated ECU ]
 ↓
-Log Event (local file)
+Main Control Loop
 ↓
-Async Telemetry Sender (thread)
+┌───────────────┐
+│ │
+[ Logger ] [ Telemetry ]
+│ │
+↓ ↓
+ecu_log.txt Retry + Send
 ↓
-External System (simulated console output)
+Console Output
 
 
 ---
 
-## 💻 Implementation Details
+## 💻 Tech Stack
 
-### 🔹 Logging
-- Events are written to a local file (`ecu_log.txt`)
-- Represents persistent storage on an ECU
-
-### 🔹 Telemetry
-- Sent asynchronously using threads
-- Simulates non-blocking data transmission
-
-### 🔹 System Loop
-- Generates periodic system events
-- Mimics real-time monitoring behavior
-
----
-
-## 🧪 Example Code Behavior
-
-- Logs a system event every few seconds
-- Sends telemetry data in parallel
-- Ensures the main system loop is never blocked
+- C++ (modular system design)
+- MSYS2 / g++ (build environment)
+- File-based logging
+- Threading (simulated async behavior)
+- Config-driven system control
 
 ---
 
 ## 🚗 Automotive Relevance
 
-This project reflects patterns used in:
+This project reflects patterns used in real vehicle systems:
 
-- ECU logging systems
-- Vehicle observability platforms
-- Remote diagnostics pipelines
-- Fleet telemetry systems
-
----
-
-## 🔁 How This Maps to Real Systems
-
-| Concept | Real Automotive System | This Project |
-|--------|----------------------|-------------|
+| Concept | Real System | This Project |
+|--------|------------|-------------|
 | ECU | Embedded control unit | Main loop |
-| OS (QNX/Linux) | Embedded runtime | C++ runtime |
+| QNX/Linux | Embedded OS | C++ runtime |
 | Logging system | ECU logs | File logging |
-| Telemetry pipeline | ECU → cloud | Async thread |
-| Observability | Fleet monitoring | Console output |
+| Telemetry pipeline | ECU → cloud | Retry send logic |
+| Observability | Fleet diagnostics | Log + output |
 
 ---
 
 ## 🚀 How to Run
 
-1. Compile the program:
-   ```bash
-   g++ logger.cpp -o logger
+### Compile
 
-Run:
+```bash
+g++ main.cpp logger.cpp telemetry.cpp config.cpp -o ecu_logger.exe
+Run
+./ecu_logger.exe
+⚙️ Configuration
 
-./logger
+Edit config.txt:
 
-View logs:
-
-cat ecu_log.txt
-🧠 Key Takeaways
-Embedded systems must prioritize performance and reliability
-Logging and telemetry should be decoupled
-Non-blocking design is critical in real-time environments
-Observability enables remote system understanding
-🔥 Next Steps (Planned Enhancements)
-Config-driven logging (control plane simulation)
-Retry + failure handling for telemetry
-Ring buffer logging (real embedded pattern)
-Integration with backend API for full pipeline
-Structured log format (JSON / protobuf-style)
+logging_enabled true
+telemetry_enabled true
+send_interval_ms 2000
+temperature_threshold 75
+max_retries 3
+retry_delay_ms 500
+🧪 Example Behavior
+Attempt 1/3: Telemetry send failed: temp=73,state=NORMAL
+Retrying in 500 ms...
+Attempt 2/3: Telemetry send failed: temp=73,state=NORMAL
+Retrying in 500 ms...
+Attempt 3/3: Sending telemetry: temp=73,state=NORMAL
+[LOG] Telemetry send failed after retries: temp=74,state=NORMAL
+🧠 Design Highlights
+Separation of concerns (control loop, logging, telemetry)
+Config-driven behavior (control plane simulation)
+Retry-based resilience (data delivery reliability)
+Observability through structured logging
+Simulation of real-world embedded constraints
+🔥 What This Demonstrates
+Embedded-style system design in C++
+Telemetry pipelines under unreliable conditions
+Runtime control over system behavior
+Observability-first architecture
+Failure-aware system design
 👤 Author
 
 Jay Tranberg
 Systems Engineer — Embedded, Observability & Data Platforms
+🌐 jaytranberg.com
 
-
----
-
-# 💥 Why this is powerful
-
-If a recruiter or engineer sees this:
-
-They don’t think:
-> “tutorial project”
-
-They think:
-> “this person understands observability systems”
+🚀 Future Enhancements
+Local queue / buffering for failed telemetry
+Structured logs (JSON / protobuf-style)
+HTTP-based telemetry delivery to backend
+Ring buffer implementation (embedded pattern)
 
 ---
 
-# 🚀 Optional power move
+# 💥 What this does for you
 
-Add this line at the top of your repo:
+If a recruiter opens this:
 
-> “Built as a focused exercise to explore ECU-level logging and telemetry patterns used in automotive observability systems (GM-style architecture).”
+👉 They instantly see:
+- embedded thinking
+- telemetry pipeline
+- observability
+- failure handling
 
----
-
-# ⚡ Next step (high impact)
-
-We can upgrade this into something **interview-winning**:
-
-- Add config file (control plane)  
-- Add retry logic (real-world failure handling)  
-- Hook to your backend (Snowman-style full loop)  
+Not:
+❌ “random C++ project”
 
 ---
 
-Say:
+# ⚡ Optional power move (HIGHLY recommended)
 
-👉 **“level 2 build”**
+At the VERY TOP, add one line:
 
-and we turn this into something you can literally talk through in an interview and impress them.
+```md
+Built as a focused simulation of ECU-level observability and telemetry patterns aligned with modern automotive data architectures (e.g., GM vehicle observability systems).

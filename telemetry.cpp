@@ -13,7 +13,7 @@ bool trySendOnce(const std::string& data) {
 
     int roll = dist(gen);
 
-    if (roll <= 70) {
+    if (roll <= 30) {
         std::cout << "Sending telemetry: " << data << std::endl;
         return true;
     }

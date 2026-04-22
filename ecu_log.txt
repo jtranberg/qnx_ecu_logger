@@ -41,3 +41,9 @@
 [LOG] Telemetry send success: temp=75,state=HIGH
 [LOG] Engine temperature HIGH: 76C
 [LOG] Telemetry send success: temp=76,state=HIGH
+[LOG] Engine temperature NORMAL: 72C
+[LOG] Telemetry send success: temp=72,state=NORMAL
+[LOG] Engine temperature NORMAL: 73C
+[LOG] Telemetry send success: temp=73,state=NORMAL
+[LOG] Engine temperature NORMAL: 74C
+[LOG] Telemetry send failed after retries: temp=74,state=NORMAL
