@@ -1,0 +1,16 @@
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 75C
+[LOG] Engine temperature normal: 76C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
+[LOG] Engine temperature normal: 75C
+[LOG] Engine temperature normal: 76C
+[LOG] Engine temperature normal: 72C
+[LOG] Engine temperature normal: 73C
+[LOG] Engine temperature normal: 74C
